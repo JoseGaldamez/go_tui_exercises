@@ -25,4 +25,13 @@ Build the core foundation of an interactive harness by implementing a custom cha
 
 ---
 
+### [002] Textinput REPL & Command History (`/002_textinput_repl_history`)
+
+Refactor the CLI Harness to replace manual rune accumulation and custom backspacing/cursor rendering with the official `github.com/charmbracelet/bubbles/textinput` component.
+
+- **Concepts introduced:** Bubble Tea sub-components, delegation of state and event loops, custom component styling (text, prompt, cursor), and standard text editing controls (cursor navigation, backspacing, and keyboard shortcuts).
+- **Exercise Details:** For complete architecture details, refactor comparison, and setup, see the project-specific [002 README](file:///Users/josegaldamez/Documents/golang/go_tui_exercises/002_textinput_repl_history/README.md).
+
+---
+
 _Crafted with ❤️ as an interactive learning module for building state-of-the-art developer CLI interfaces in Go._
