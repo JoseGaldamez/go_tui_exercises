@@ -84,6 +84,7 @@ const (
 )
 
 type httpResult struct {
+	URL           string
 	StatusCode    int
 	ContentType   string
 	ContentLength int
@@ -185,6 +186,7 @@ func (m model) fetchURL(urlStr string) tea.Cmd {
 			urlStr = "https://" + urlStr
 		}
 
+		// Create request
 		req, err := http.NewRequest("GET", urlStr, nil)
 		if err != nil {
 			return fetchResultMsg{result: httpResult{Error: err}}
@@ -193,6 +195,8 @@ func (m model) fetchURL(urlStr string) tea.Cmd {
 		client := &http.Client{
 			Timeout: 10 * time.Second,
 		}
+
+		// call request
 		resp, err := client.Do(req)
 		if err != nil {
 			return fetchResultMsg{result: httpResult{Error: err, Duration: time.Since(start)}}
@@ -225,6 +229,7 @@ func (m model) fetchURL(urlStr string) tea.Cmd {
 		}
 
 		return fetchResultMsg{result: httpResult{
+			URL:           urlStr,
 			StatusCode:    resp.StatusCode,
 			ContentType:   contentType,
 			ContentLength: contentLength,
@@ -266,7 +271,13 @@ func (m model) View() string {
 		} else {
 			responseContent = successStyle.Render("✅ Success")
 			responseContent += "\n\n"
-			responseContent += infoStyle.Render(fmt.Sprintf("Status Code: %d", m.result.StatusCode))
+
+			urlWithStyle := lipgloss.NewStyle().Foreground(infoBlue).Render(m.result.URL)
+
+			statusCodeWithStyle := lipgloss.NewStyle().Foreground(accentGreen).Render(fmt.Sprintf("%d", m.result.StatusCode))
+
+			responseContent += fmt.Sprintf("URL: %s\n", urlWithStyle)
+			responseContent += fmt.Sprintf("Status Code: %s", statusCodeWithStyle)
 			responseContent += fmt.Sprintf("\nContent-Type: %s", m.result.ContentType)
 			responseContent += fmt.Sprintf("\nLength: %d bytes", m.result.ContentLength)
 			responseContent += fmt.Sprintf("\nDuration: %v", m.result.Duration)
